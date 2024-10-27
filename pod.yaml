@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mywebapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mywebapp
+      version: blue
+  template:
+    metadata:
+      name: mywebapp
+      labels:
+        app: mywebapp
+        version: blue
+    spec:
+      containers:
+      - name: mywebapp-container
+        image: 471836749170.dkr.ecr.us-east-1.amazonaws.com/app/mywebapp:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - mountPath: /var/www/html/mywebapp/data
+          name: vol-zrrkq
+      securityContext:
+        fsGroup: 33
+      volumes:
+      - name: vol-zrrkq
+        persistentVolumeClaim:
+          claimName: data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mywebapp-svc
+  labels:
+    app: mywebapp
+spec:
+  selector:
+    app: mywebapp
+    version: blue
+  type: NodePort
+  ports:
+  - nodePort:
+    port: 80
+    targetPort: 80

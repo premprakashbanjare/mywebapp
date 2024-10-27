@@ -13,7 +13,7 @@ node {
         }
     }
     stage('Push Image') {
-        docker.withRegistry('471836749170.dkr.ecr.us-east-1.amazonaws.com/app/mywebapp') {
+        docker.withRegistry('https://471836749170.dkr.ecr.us-east-1.amazonaws.com/app/mywebapp') {
             app.push("$env.BUILD_NUMBER")
             app.push ("latest") 
         }
